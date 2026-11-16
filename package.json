@@ -13,7 +13,8 @@
     "extraction": "tsx app/\\(1-extraction\\)/extraction.ts",
     "classification": "tsx app/\\(2-classification\\)/classification.ts",
     "invisible-ai:compare": "tsx app/\\(2-invisible-ai\\)/test-structured.ts",
-    "invisible-ai:demo": "tsx app/\\(2-invisible-ai\\)/invisible-ai-demo.ts"
+    "invisible-ai:demo": "tsx app/\\(2-invisible-ai\\)/invisible-ai-demo.ts",
+    "summarization:large": "tsx app/\\(3-summarization\\)/large-summary.ts"
   },
   "dependencies": {
     "@ai-sdk/gateway": "^4.0.137",

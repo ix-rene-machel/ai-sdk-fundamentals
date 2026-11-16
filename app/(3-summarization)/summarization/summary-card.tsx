@@ -25,7 +25,7 @@ export function SummaryCard({
         <ul className="list-disc space-y-2 pl-5 text-sm">
           <li>{context}</li>
           <li>{discussionPoints}</li>
-          <li>{takeaways}</li>
+          <li className="whitespace-pre-line">{takeaways}</li>
         </ul>
       </CardContent>
     </Card>
