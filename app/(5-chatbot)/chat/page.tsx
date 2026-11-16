@@ -10,14 +10,22 @@ import {
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import {
+  Tool,
+  ToolContent,
+  ToolHeader,
+  ToolInput,
+  ToolOutput,
+} from "@/components/ai-elements/tool";
+import {
   PromptInput,
   PromptInputTextarea,
   PromptInputSubmit,
 } from "@/components/ai-elements/prompt-input";
+import type { ChatMessage } from "@/app/api/chat/tools";
 
 export default function Chat() {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status } = useChat<ChatMessage>();
 
   const isLoading = status === "streaming" || status === "submitted";
 
@@ -35,12 +43,28 @@ export default function Chat() {
               <Message key={message.id} from={message.role}>
                 <MessageContent>
                   {message.role === "assistant" ? (
-                    <MessageResponse>
-                      {message.parts
-                        ?.filter((part) => part.type === "text")
-                        .map((part) => part.text)
-                        .join("")}
-                    </MessageResponse>
+                    message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case "text":
+                          return (
+                            <MessageResponse key={`${message.id}-${i}`}>
+                              {part.text}
+                            </MessageResponse>
+                          );
+                        case "tool-getWeather": // Tool parts are named "tool-TOOLNAME"
+                          return (
+                            <Tool key={part.toolCallId}>
+                              <ToolHeader type={part.type} state={part.state} />
+                              <ToolContent>
+                                <ToolInput input={part.input} />
+                                <ToolOutput output={part.output} errorText={part.errorText} />
+                              </ToolContent>
+                            </Tool>
+                          );
+                        default:
+                          return null;
+                      }
+                    })
                   ) : (
                     message.parts?.map((part) => part.type === "text" && part.text)
                   )}
