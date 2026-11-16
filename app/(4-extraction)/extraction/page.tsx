@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CalendarAppointment } from "./calendar-appointment";
+import { AppointmentCard } from "./appointment-card";
 import { extractAppointment } from "./actions";
 import { localIsoDate, type AppointmentDetails } from "./schemas";
 
@@ -56,6 +57,17 @@ export default function Page() {
             </form>
           </CardContent>
         </Card>
+        {appointment && (
+          <AppointmentCard
+            title={appointment.title}
+            date={appointment.date}
+            time={
+              appointment.startTime &&
+              [appointment.startTime, appointment.endTime].filter(Boolean).join(" - ")
+            }
+            location={appointment.location}
+          />
+        )}
         <CalendarAppointment appointment={appointment} />
       </div>
     </div>
