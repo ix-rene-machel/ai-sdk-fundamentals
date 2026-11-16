@@ -1,17 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {  ClockIcon, MapPinIcon, UsersIcon } from "lucide-react"
+import type { AppointmentDetails } from "./schemas"
 
-export interface AppointmentDetails {
-  title: string
-  date: string
-  startTime: string | null
-  endTime: string | null
-  location: string | null
-  attendees: string[] | null
-}
-
-interface CalendarAppointmentProps {
+type CalendarAppointmentProps = {
   appointment: AppointmentDetails | null
 }
 
