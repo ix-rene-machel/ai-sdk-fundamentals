@@ -9,7 +9,7 @@ const essay = fs.readFileSync("app/(1-extraction)/essay.txt", "utf-8");
 async function main() {
 	// Call the LLM with our extraction prompt
 	const result = await generateText({
-		model: "openai/gpt-5", // Fast, cost-effective for simple extraction tasks (non-reasoning)
+		model: "openai/gpt-5.4", // ICA model (see AGENTS.md)
 		// For complex analysis, try 'openai/gpt-5' (reasoning model, slower but more accurate)
 		prompt: `What is the key takeaway of this piece in 50 words?
  
