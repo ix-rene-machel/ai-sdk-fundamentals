@@ -3,13 +3,16 @@ import {
   convertToModelMessages,
   createUIMessageStreamResponse,
   toUIMessageStream,
+  isStepCount,
 } from "ai";
 import { tools, type ChatMessage } from "./tools";
 
 // System prompt: persistent persona + constraints for every turn (`instructions`, called `system` before AI SDK v7).
 // System prompts lesson iterated: helpful assistant → riddle bot → 1984 Steve Jobs → TechCorp support assistant.
-// Tool use lesson resets to a generic assistant so weather questions are not deflected as off-topic.
-const SYSTEM_PROMPT = "You are a helpful assistant.";
+// Tool use lesson reset it to a generic assistant; multi-step lesson adds tool capability limits to prevent overpromising.
+const SYSTEM_PROMPT = `You are a helpful assistant. When using tools, only mention
+capabilities you actually have. The weather tool provides current
+temperature, conditions, and humidity only - no forecasts.`;
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -23,6 +26,7 @@ export async function POST(req: Request): Promise<Response> {
       instructions: SYSTEM_PROMPT,
       messages: await convertToModelMessages(messages),
       tools,
+      stopWhen: isStepCount(5), // multi-step: tool calls + final text answer
     });
 
     return createUIMessageStreamResponse({

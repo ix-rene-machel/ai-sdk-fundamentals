@@ -22,6 +22,7 @@ import {
   PromptInputSubmit,
 } from "@/components/ai-elements/prompt-input";
 import type { ChatMessage } from "@/app/api/chat/tools";
+import Weather from "./weather";
 
 export default function Chat() {
   const [input, setInput] = useState("");
@@ -52,6 +53,15 @@ export default function Chat() {
                             </MessageResponse>
                           );
                         case "tool-getWeather": // Tool parts are named "tool-TOOLNAME"
+                          // Generative UI: Weather card for successful results
+                          if (
+                            part.state === "output-available" &&
+                            part.output &&
+                            !("error" in part.output)
+                          ) {
+                            return <Weather key={part.toolCallId} weatherData={part.output} />;
+                          }
+                          // Tool card for loading, errors and unknown cities
                           return (
                             <Tool key={part.toolCallId}>
                               <ToolHeader type={part.type} state={part.state} />
