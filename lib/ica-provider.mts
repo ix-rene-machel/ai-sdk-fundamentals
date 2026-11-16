@@ -1,6 +1,6 @@
 // Preload: routes AI SDK string model ids ("openai/gpt-5.4") to IBM ICA instead of Vercel AI Gateway.
 // Loaded for every pnpm-run node process via `node-options` in .npmrc.
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import dotenvFlow from "dotenv-flow";
 import { createOpenAI } from "@ai-sdk/openai";
 
@@ -20,7 +20,9 @@ const ICA_MODELS = new Set<string>([
 const readApiKey = (): string | undefined => {
 	if (process.env.ICA_API_KEY) return process.env.ICA_API_KEY;
 	try {
-		return execSync("security find-generic-password -s pi-ica-heineken-api-key -w", {
+		// Keychain service name; override locally via ICA_KEYCHAIN_SERVICE in .env.local
+		const service = process.env.ICA_KEYCHAIN_SERVICE ?? "pi-ica-api-key";
+		return execFileSync("security", ["find-generic-password", "-s", service, "-w"], {
 			encoding: "utf-8",
 			stdio: ["ignore", "pipe", "ignore"],
 		}).trim();
